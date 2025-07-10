@@ -121,8 +121,9 @@ class ReactAgent:
                 ))
             # 添加新的用户消息
             messages.append(HumanMessage(content=input["messages"]))
-            # 更新状态并重新开始Agent处理
+            # 更新状态(新加了用户拒绝的消息，和用户可能新输入的消息)
             self.agent_executor.update_state(config, {"messages": messages})
+            # goto="agent"：跳转到 Agent 节点重新开始推理, 不是 resume：这不是恢复之前的工具调用，而是从头开始新的推理循环
             response = await self._handle_message(Command(goto="agent"), config=config)
         elif previous_state == State.NORMAL:
             # 正常处理流程
